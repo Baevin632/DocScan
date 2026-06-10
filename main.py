@@ -1,0 +1,94 @@
+from fastapi import FastAPI,UploadFile,File,HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from pydantic import BaseModel
+import uvicorn 
+from dotenv import load_dotenv
+from langchain_community.vectorstores import FAISS
+
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from langchain_community.document_loaders import PyPDFLoader
+
+import os
+
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+load_dotenv()
+
+app = FastAPI(title="DocScan-Rag")
+
+app.add_middleware(CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+
+
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash", 
+    temperature=0.3,
+    google_api_key="your_gemini_key_here"
+)
+
+vector_store=None
+
+class ChatRequest(BaseModel):
+    message:str
+    
+
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File()):
+    global vector_store
+    try:
+        file_path = f"temp_{file.filename}"
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+
+        loader = PyPDFLoader(file_path)
+        docs = loader.load()
+
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        chunks = text_splitter.split_documents(docs)
+
+        vector_store = FAISS.from_documents(chunks, embeddings)
+        
+        os.remove(file_path)
+        return {"message": f"✅ Successfully processed '{file.filename}' ({len(chunks)} chunks)"}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    global vector_store
+    if vector_store is None:
+        return {"answer": "Please upload a document first."}
+    try:
+        
+        retriever = vector_store.as_retriever(search_kwargs={"k": 4})
+        relevant_docs = retriever.invoke(request.message)
+        
+        context = "\n\n".join([doc.page_content for doc in relevant_docs])
+
+        prompt = f"""Answer the question based only on the context provided.
+Context: {context}
+
+Question: {request.message}
+Answer:"""
+
+        response = llm.invoke(prompt)
+        return {"answer": response.content}
+
+    except Exception as e:
+        return {"answer": f"Error: {str(e)}"}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
