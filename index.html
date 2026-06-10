@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocScan - Chat with your PDF</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f4; }
+    .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .header { background: #2563eb; color: white; padding: 15px; text-align: center; border-radius: 10px 10px 0 0; }
+    .chat { height: 60vh; overflow-y: auto; padding: 20px; border-bottom: 1px solid #ddd; }
+    .message { margin: 10px 0; padding: 10px; border-radius: 8px; max-width: 80%; }
+    .user { background: #2563eb; color: white; margin-left: auto; }
+    .bot { background: #e5e7eb; }
+    .input-area { padding: 15px; display: flex; gap: 10px; }
+    input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+    button { padding: 12px 20px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    .upload-area { padding: 15px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>📄 DocScan - Chat with your PDF</h2>
+    </div>
+
+    <div class="upload-area">
+      <input type="file" id="pdfFile" accept=".pdf">
+      <button onclick="uploadPDF()">Upload PDF</button>
+    </div>
+
+    <div class="chat" id="chat"></div>
+
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Ask a question about the document..." onkeypress="if(event.key === 'Enter') sendMessage()">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    let hasDocument = false;
+
+    function addMessage(text, type) {
+      const chat = document.getElementById('chat');
+      const msg = document.createElement('div');
+      msg.className = `message ${type}`;
+      msg.textContent = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function uploadPDF() {
+      const fileInput = document.getElementById('pdfFile');
+      if (!fileInput.files.length) {
+        alert("Please select a PDF file");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      addMessage("Uploading PDF...", "bot");
+
+      try {
+        const res = await fetch('http://localhost:8000/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        
+        addMessage(data.message, "bot");
+        hasDocument = true;
+      } catch (err) {
+        addMessage("Upload failed. Is the backend running?", "bot");
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      addMessage(message, "user");
+      input.value = "";
+
+      if (!hasDocument) {
+        addMessage("Please upload a document first!", "bot");
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:8000/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message })
+        });
+        const data = await res.json();
+        addMessage(data.answer, "bot");
+      } catch (err) {
+        addMessage("Error connecting to backend", "bot");
+      }
+    }
+  </script>
+</body>
+</html>
