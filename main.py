@@ -14,6 +14,8 @@ from langchain_community.document_loaders import PyPDFLoader
 
 import os
 
+
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
@@ -32,9 +34,9 @@ embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6
 
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash", 
+    model="gemini-3.1-flash-lite",  
     temperature=0.3,
-    google_api_key="your_gemini_key_here"
+    google_api_key=os.getenv("key")
 )
 
 vector_store=None
@@ -63,6 +65,7 @@ async def upload_pdf(file: UploadFile = File()):
         return {"message": f"✅ Successfully processed '{file.filename}' ({len(chunks)} chunks)"}
     
     except Exception as e:
+        print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/chat")
@@ -78,17 +81,23 @@ async def chat(request: ChatRequest):
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
         prompt = f"""Answer the question based only on the context provided.
-Context: {context}
+        Context: {context}
 
-Question: {request.message}
-Answer:"""
+        Question: {request.message}
+        Answer:"""
 
         response = llm.invoke(prompt)
-        return {"answer": response.content}
+       
+        return {"answer": response.text}
+    
+    
+    
+
+    
 
     except Exception as e:
         return {"answer": f"Error: {str(e)}"}
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000,reload=True)
