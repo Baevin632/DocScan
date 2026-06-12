@@ -57,7 +57,7 @@ print("BEFORE GEMINI")
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",  
     temperature=0.3,
-    google_api_key=os.getenv("key")
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 print("AFTER GEMINI")
 vector_store=None
