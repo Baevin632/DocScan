@@ -9,9 +9,9 @@ import uvicorn
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
+#from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+#from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from langchain_community.document_loaders import PyPDFLoader
 
@@ -53,7 +53,7 @@ vector_store=None
 class ChatRequest(BaseModel):
     message:str
     
-
+'''
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File()):
     global vector_store
@@ -76,7 +76,7 @@ async def upload_pdf(file: UploadFile = File()):
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
-
+'''
 @app.post("/chat")
 async def chat(request: ChatRequest):
     global vector_store
