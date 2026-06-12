@@ -29,16 +29,16 @@ app.add_middleware(CORSMiddleware,
     allow_headers=["*"],
 )
 
-embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+#embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 
-
+'''
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",  
     temperature=0.3,
     google_api_key=os.getenv("key")
 )
-
+'''
 vector_store=None
 
 class ChatRequest(BaseModel):
