@@ -20,6 +20,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
+print("START")
+
 app = FastAPI(title="DocScan-Rag")
 
 app.add_middleware(CORSMiddleware,
@@ -29,16 +31,20 @@ app.add_middleware(CORSMiddleware,
     allow_headers=["*"],
 )
 
+
+print("BEFORE EMBEDDINGS")
 #embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+print("AFTER EMBEDDINGS")
 
 
-'''
+
+print("BEFORE GEMINI")
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",  
     temperature=0.3,
     google_api_key=os.getenv("key")
 )
-'''
+print("AFTER GEMINI")
 vector_store=None
 
 class ChatRequest(BaseModel):
