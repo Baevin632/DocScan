@@ -39,7 +39,7 @@ print("BEFORE EMBEDDINGS")
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-004",
+    model="models/text-embedding-004",
     google_api_key=os.getenv("key")
 )
 print("AFTER EMBEDDINGS")
