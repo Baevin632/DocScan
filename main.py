@@ -1,6 +1,6 @@
 
 print("top of file")
-'''
+
 from fastapi import FastAPI,UploadFile,File,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -36,8 +36,10 @@ app.add_middleware(CORSMiddleware,
 
 
 print("BEFORE EMBEDDINGS")
+'''
 embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 print("AFTER EMBEDDINGS")
+'''
 
 
 
@@ -52,6 +54,8 @@ vector_store=None
 
 class ChatRequest(BaseModel):
     message:str
+
+'''
     
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File()):
@@ -75,6 +79,7 @@ async def upload_pdf(file: UploadFile = File()):
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
+'''
    
 @app.post("/chat")
 async def chat(request: ChatRequest):
@@ -111,22 +116,11 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=8000,reload=False)
 
-    '''
 
-from fastapi import FastAPI
 
-print("FILE IMPORTED")
 
-app = FastAPI()
 
-print("APP CREATED")
-
-@app.get("/")
-def root():
-    return {"message": "hello"}
-
-'''    "langchain (>=1.3.2,<2.0.0)",
-    "langchain-community (>=0.4.2,<0.5.0)",
+'''   
     "langchain-text-splitters (>=1.1.2,<2.0.0)",
     "langchain-google-genai (>=4.2.5,<5.0.0)",
     "sentence-transformers (>=5.5.1,<6.0.0)",
