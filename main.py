@@ -1,4 +1,4 @@
-raise Exception("MAIN FILE LOADED")
+
 print("top of file")
 
 from fastapi import FastAPI,UploadFile,File,HTTPException
