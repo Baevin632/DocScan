@@ -44,7 +44,13 @@ embeddings = GoogleGenerativeAIEmbeddings(
 )
 print("AFTER EMBEDDINGS")
 
-
+@app.get("/test-chat")
+def test_chat():
+    try:
+        response = llm.invoke("Say hello")
+        return {"answer": response.content}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 print("BEFORE GEMINI")
