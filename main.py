@@ -9,14 +9,13 @@ import uvicorn
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 
-#from langchain_community.embeddings import HuggingFaceEmbeddings
 
-#from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from langchain_community.document_loaders import PyPDFLoader
 
 import os
-
 
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -36,10 +35,15 @@ app.add_middleware(CORSMiddleware,
 
 
 print("BEFORE EMBEDDINGS")
-'''
-embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+embeddings = GoogleGenerativeAIEmbeddings(
+    model="models/embedding-001",
+    google_api_key=os.getenv("key")
+)
 print("AFTER EMBEDDINGS")
-'''
+
 
 
 
@@ -55,7 +59,7 @@ vector_store=None
 class ChatRequest(BaseModel):
     message:str
 
-'''
+
     
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File()):
@@ -79,7 +83,7 @@ async def upload_pdf(file: UploadFile = File()):
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
-'''
+
    
 @app.post("/chat")
 async def chat(request: ChatRequest):
@@ -120,10 +124,3 @@ if __name__ == "__main__":
 
 
 
-'''   
-    "langchain-text-splitters (>=1.1.2,<2.0.0)",
-    "langchain-google-genai (>=4.2.5,<5.0.0)",
-    "sentence-transformers (>=5.5.1,<6.0.0)",
-    "python-multipart (>=0.0.32,<0.0.33)",
-    "pypdf (>=6.13.2,<7.0.0)",
-    "faiss-cpu (>=1.14.2,<2.0.0)" '''
