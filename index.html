@@ -62,7 +62,7 @@
       addMessage("Uploading PDF...", "bot");
 
       try {
-        const res = await fetch('http://localhost:8000/upload', {
+        const res = await fetch('https://docscan-7ni9.onrender.com/upload', {
           method: 'POST',
           body: formData
         });
@@ -89,7 +89,7 @@
       }
 
       try {
-        const res = await fetch('http://localhost:8000/chat', {
+        const res = await fetch('https://docscan-7ni9.onrender.com/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: message })
