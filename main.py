@@ -1,6 +1,6 @@
 
 print("top of file")
-
+'''
 from fastapi import FastAPI,UploadFile,File,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -53,7 +53,6 @@ vector_store=None
 class ChatRequest(BaseModel):
     message:str
     
-'''
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File()):
     global vector_store
@@ -76,7 +75,7 @@ async def upload_pdf(file: UploadFile = File()):
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=500, detail=str(e))
-'''
+   
 @app.post("/chat")
 async def chat(request: ChatRequest):
     global vector_store
@@ -111,3 +110,17 @@ async def chat(request: ChatRequest):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run("main:app", host="0.0.0.0", port=8000,reload=False)
+
+    '''
+
+from fastapi import FastAPI
+
+print("FILE IMPORTED")
+
+app = FastAPI()
+
+print("APP CREATED")
+
+@app.get("/")
+def root():
+    return {"message": "hello"}
