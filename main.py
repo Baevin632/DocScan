@@ -113,7 +113,7 @@ async def chat(request: ChatRequest):
         - Use short paragraphs. Do not write long blocks of text.
         - Use bullet points when listing things.
         - Never use **, *, -, #, or any markdown symbols.
-        - Always mention the source when possible (e.g., "According to page 2...", "In the Experience section...", etc.).
+        - Always mention the source when possible (e.g., "According to page 2,section experince, paragraph 2, line 3", etc.).
         - If the answer is not in the document, say: "Sorry, this information is not available in the document."
 
         Context: {context}
