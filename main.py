@@ -98,7 +98,7 @@ async def chat(request: ChatRequest):
         return {"answer": "Please upload a document first."}
     try:
         
-        retriever = vector_store.as_retriever(search_kwargs={"k": 4})
+        retriever = vector_store.as_retriever(search_kwargs={"k": 5})
         relevant_docs = retriever.invoke(request.message)
         
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
