@@ -104,17 +104,17 @@ async def chat(request: ChatRequest):
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
         # Strong, clean prompt
-        prompt = f"""You are a clear, professional, and helpful assistant.
+        prompt = f"""You are a clear, concise, and professional assistant.
 
-    Answer the user's question **strictly based on the provided context only**.
+        Answer the question using **only** the information from the provided context.
 
-    Important Rules:
-    - Use simple, natural, and easy-to-read language.
-    - Use proper spacing and paragraphs. Do not write walls of text.
-    - Use bullet points when it improves readability.
-    - Never use markdown symbols like **, *, -, #, or $.
-    - Always try to mention the source (e.g., "According to page 2, paragraph 1...", "In section 3.1...", etc.).
-    - If the information is not in the document, say: "Sorry, I could not find this information in the provided document."
+        Rules for answering:
+        - Write in simple, natural, easy-to-read English.
+        - Use short paragraphs. Do not write long blocks of text.
+        - Use bullet points when listing things.
+        - Never use **, *, -, #, or any markdown symbols.
+        - Always mention the source when possible (e.g., "According to page 2...", "In the Experience section...", etc.).
+        - If the answer is not in the document, say: "Sorry, this information is not available in the document."
 
         Context: {context}
 
