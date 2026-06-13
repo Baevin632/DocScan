@@ -103,7 +103,15 @@ async def chat(request: ChatRequest):
         
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
-        prompt = f"""Answer the question based only on the context provided.
+        # Strong, clean prompt
+        prompt = f"""You are a helpful and precise assistant.
+        Answer the question **only** using the provided context.
+        Rules:
+        - Give clear, natural, well-formatted answers.
+        - Do NOT use markdown symbols like **, *, -, #.
+        - Use simple paragraphs and bullet points only when necessary.
+        - you must mention the source (in this page,in this paragrpah, and line number if possible).
+
         Context: {context}
 
         Question: {request.message}
