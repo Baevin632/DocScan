@@ -107,7 +107,9 @@ async def chat(request: ChatRequest):
         prompt = f"""You are a helpful and precise assistant.
         Answer the question **only** using the provided context.
         Rules:
-        - Give clear, natural, well-formatted answers. if it is a large paragraph try spacing it out and including bullet points to make the response look very good
+        - Give clear, natural, well-formatted answers. 
+        -if it is a large paragraph try spacing it out 
+        -and including bullet points to make the response look very good
         - Do NOT use markdown symbols like **, *, -, #.
         - Use simple paragraphs and bullet points only when necessary.
         - you must mention the source (in this page,in this paragrpah, and line number if possible).
