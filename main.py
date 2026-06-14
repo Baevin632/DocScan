@@ -104,22 +104,23 @@ async def chat(request: ChatRequest):
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
         # Strong, clean prompt
-        prompt = f"""You are a clear, concise, and professional assistant.
+        prompt = f"""You are a precise and helpful assistant.
 
-        Answer the question using **only** the information from the provided context.
+Answer the question using **only** the provided context.
 
-        Rules for answering:
-        - Write in simple, natural, easy-to-read English.
-        - Use short paragraphs. Do not write long blocks of text.
-        - Use bullet points when listing things.
-        - Never use **, *, -, #, or any markdown symbols.
-        - Always mention the source when possible (e.g., "According to page 2,section experince, paragraph 2, line 3", etc.).
-        - If the answer is not in the document, say: "Sorry, this information is not available in the document."
+Rules:
+- Be concise and clear.
+- Use short paragraphs and bullet points when helpful.
+- Never use **, *, #, or markdown symbols.
+- Always mention the exact source like: "According to page X..." or "In page Y, paragraph Z...".
+- If the information is not found, say: "Sorry, this information is not available in the document."
 
-        Context: {context}
+Context:
+{context}
 
-        Question: {request.message}
-        Answer:"""
+Question: {request.message}
+
+Answer:"""
 
         response = llm.invoke(prompt)
        
