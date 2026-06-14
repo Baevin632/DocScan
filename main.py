@@ -104,16 +104,17 @@ async def chat(request: ChatRequest):
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
         # Strong, clean prompt
-        prompt = f"""You are a clear and well-organized assistant.
+        prompt = f"""You are a clear, concise, and professional assistant.
 
-Answer the question using only the given context.
+Answer the question using ONLY the provided context.
 
-**Mandatory Formatting Rules:**
+**Strict Rules:**
 - Use short sentences.
 - Use line breaks between ideas.
 - Use simple bullet points (-) for lists.
 - Never use **, *, #, or any markdown.
 - Always mention the source (e.g. "According to page 1...").
+-do not write long paragraphs
 - Keep the answer concise.
 Context:
 {context}
