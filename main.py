@@ -104,30 +104,30 @@ async def chat(request: ChatRequest):
         context = "\n\n".join([doc.page_content for doc in relevant_docs])
 
         # Strong, clean prompt
-    prompt = f"""
-You are an intelligent PDF assistant.
+        prompt = f"""
+        You are an intelligent PDF assistant.
 
-Answer naturally and professionally.
+        Answer naturally and professionally.
 
-Use bullet points whenever the information is a list.
+        Use bullet points whenever the information is a list.
 
-Do not repeat phrases such as:
-"According to page 1"
+        Do not repeat phrases such as:
+        "According to page 1"
 
-Instead provide:
+        Instead provide:
 
-Source: Page X
+        Source: Page X
 
-at the end of the answer.
+        at the end of the answer.
 
-If the answer is not found in the document, say:
+        If the answer is not found in the document, say:
 
-"I could not find that information in the document."
+        "I could not find that information in the document."
 
-Context:
-{context}
+        Context:
+        {context}
 
-Question: {request.message}
+        Question: {request.message}
 
         Answer:"""
 
