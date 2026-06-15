@@ -105,24 +105,32 @@ async def chat(request: ChatRequest):
 
         # Strong, clean prompt
         prompt = f"""
-        You are an intelligent PDF assistant.
+        You are a PDF assistant.
 
-        Answer naturally and professionally.
+For list-like questions such as:
+- skills
+- experience
+- education
+- projects
+- certifications
 
-        Use bullet points whenever the information is a list.
+Return ONLY bullet points.
 
-        Do not repeat phrases such as:
-        "According to page 1"
+Do not write introductions.
 
-        Instead provide:
+Do not write summaries.
 
-        Source: Page X
+Do not write paragraphs.
 
-        at the end of the answer.
+Use this format:
 
-        If the answer is not found in the document, say:
+Experience
 
-        "I could not find that information in the document."
+• Item 1
+• Item 2
+• Item 3
+
+Source: Page X
 
         Context:
         {context}
