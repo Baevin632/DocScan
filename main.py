@@ -131,7 +131,7 @@ Answer:"""
         answer_text = answer_text.replace("**", "").replace("*", "").replace(" - ", " • ")
         answer_text = answer_text.strip()
        
-        return {"answer": response.text}
+        return {"answer": answer_text}
     
     
     
