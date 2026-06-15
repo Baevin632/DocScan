@@ -100,8 +100,23 @@ async def chat(request: ChatRequest):
         
         retriever = vector_store.as_retriever(search_kwargs={"k": 4})
         relevant_docs = retriever.invoke(request.message)
-        
-        context = "\n\n".join([doc.page_content for doc in relevant_docs])
+
+        context_parts = []
+        pages_used = set()
+
+        for doc in relevant_docs:
+            page = doc.metadata.get("page", 0) + 1
+            pages_used.add(page)
+
+            context_parts.append(
+                f"[PAGE {page}]\n{doc.page_content}"
+            )
+
+        context = "\n\n".join(context_parts)
+
+        source_pages = ", ".join(
+            map(str, sorted(pages_used))
+        )
 
         # Strong, clean prompt
         prompt = f"""
@@ -131,6 +146,34 @@ Experience
 • Item 3
 
 Source: Page X
+Formatting Rules:
+
+- Every bullet must be on its own line.
+- Put a blank line between sections.
+- Never place multiple bullets on one line.
+- Never return a paragraph for list questions.
+- For skills, experience, projects, education and achievements:
+  return a structured list.
+
+Example:
+
+Skills
+
+Languages
+• Python
+• Java
+• SQL
+
+AI / ML
+• PyTorch
+• NLP
+• RAG
+
+Backend
+• FastAPI
+• PostgreSQL
+
+Source: Page 1
 
         Context:
         {context}
@@ -146,6 +189,8 @@ Source: Page X
         # Clean up the output
         answer_text = answer_text.replace("**", "").replace("*", "").replace(" - ", " • ")
         answer_text = answer_text.strip()
+
+        answer_text += f"\n\nSource: Page(s) {source_pages}"
        
         return {"answer": answer_text}
     
