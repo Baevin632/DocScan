@@ -125,6 +125,8 @@ Answer:"""
 
         response = llm.invoke(prompt)
 
+        answer_text=response.text
+
         # Clean up the output
         answer_text = answer_text.replace("**", "").replace("*", "").replace(" - ", " • ")
         answer_text = answer_text.strip()
