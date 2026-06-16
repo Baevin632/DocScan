@@ -145,7 +145,10 @@ Experience
 • Item 2
 • Item 3
 
-Source: Page X
+
+Do not simply repeat bullet points.
+
+Explain the meaning of the information.
 Formatting Rules:
 
 - Every bullet must be on its own line.
@@ -173,7 +176,16 @@ Backend
 • FastAPI
 • PostgreSQL
 
-Source: Page 1
+If the user asks:
+
+- explain
+- summarize
+- elaborate
+- describe
+- tell me more
+- how does it work etc 
+
+then write a detailed explanation.
 
         Context:
         {context}
